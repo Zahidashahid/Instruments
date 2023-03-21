@@ -16,7 +16,7 @@ public class PlayAudioFromFile : MonoBehaviour
         {
             audioFileNme += ".wav";
         }
-        var filepath = Path.Combine(Application.persistentDataPath, audioFileNme);
+        string filepath = Path.Combine(Application.persistentDataPath, audioFileNme);
         Debug.Log("Play clip to " + filepath);
         // Make sure the directory exists
         Directory.CreateDirectory(Path.GetDirectoryName(filepath));
@@ -32,7 +32,7 @@ public class PlayAudioFromFile : MonoBehaviour
     {
         // Load the audio clip from the file path using WWW class
         Debug.Log("path " + path);
-        WWW audioLoader = new WWW("file://" + path);
+        WWW audioLoader = new WWW("file://" + path); //WW is used for unity web request 
         // Wait until the audio clip is completely loaded
         Debug.Log("path " + path);
         Debug.Log("audioSource.name " + audioLoader);
