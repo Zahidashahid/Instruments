@@ -6,7 +6,10 @@ using System;
 public static class SavWav
 {
     const int HEADER_SIZE = 44;
-
+    // This method saves an AudioClip to a WAV file.
+    // The method takes a filename and an AudioClip as input parameters.
+    // The AudioClip is converted to a float array, which is then used to create the WAV file.
+    // The method returns true if the file was saved successfully, false otherwise.
     public static bool Save(string filename, AudioClip clip)
     {
         if (!filename.ToLower().EndsWith(".wav"))
@@ -25,19 +28,22 @@ public static class SavWav
         var samples = new float[clip.samples];
         clip.GetData(samples, 0);
 
-        // Create the WAV file
+        // Create an empty file for the WAV file and write the header.
         using (var fileStream = CreateEmpty(filepath))
         {
             ConvertAndWrite(fileStream, samples);
             WriteHeader(fileStream, clip);
         }
 
-        return true; // TODO: return false if there's a failure saving the file
+        return true; 
     }
+    // This method creates an empty WAV file and writes the header to the file.
+    // The method takes a filepath as an input parameter and returns a FileStream object.
 
     private static FileStream CreateEmpty(string filepath)
     {
         var fileStream = new FileStream(filepath, FileMode.Create);
+        // Write an empty header to the file.
         byte emptyByte = new byte();
 
         for (int i = 0; i < HEADER_SIZE; i++) // Preparing the header
@@ -47,30 +53,38 @@ public static class SavWav
 
         return fileStream;
     }
+    // This method converts a float array to an Int16 array and writes the data to the file.
+    // The method takes a FileStream object and a float array as input parameters.
 
     private static void ConvertAndWrite(FileStream fileStream, float[] samples)
     {
-        Int16[] intData = new Int16[samples.Length];
-
-        // Convert the float to Int16
+        Int16[] intData = new Int16[samples.Length]; // Convert the float array to an Int16 array.
+         
         int rescaleFactor = 32767; // 16-bit (short) range
         for (int i = 0; i < samples.Length; i++)
         {
             intData[i] = (short)(samples[i] * rescaleFactor);
         }
 
-        // Write the data
+        // Write the data to the file.
         Byte[] byteData = new Byte[intData.Length * 2];
         Buffer.BlockCopy(intData, 0, byteData, 0, byteData.Length);
         fileStream.Write(byteData, 0, byteData.Length);
     }
+    // This method writes the header to the WAV file.
+    // The method takes a FileStream object and an AudioClip as input parameters.
 
+
+    /*This method takes in a FileStream and an AudioClip object. It writes the header information to the file stream,
+     * which includes the RIFF chunk descriptor, RIFF stands for "Resource Interchange File Format."   
+     * The RIFF format consists of a header followed by data chunks.*/
     private static void WriteHeader(FileStream fileStream, AudioClip clip)
     {
+        // Get the sample rate, number of channels, and number of samples from the AudioClip.
         var hz = clip.frequency;
         var channels = clip.channels;
         var samples = clip.samples;
-
+        // Move to the beginning of the file.
         fileStream.Seek(0, SeekOrigin.Begin);
 
         Byte[] riff = System.Text.Encoding.UTF8.GetBytes("RIFF");
