@@ -52,7 +52,7 @@ public class PlayAudioFromFile : MonoBehaviour
             audioFileNme += ".wav";
         }
         // Combine the filename with the persistent data path to get the full file path
-        string filepath = Path.Combine(Application.persistentDataPath, audioFileNme);
+        string filepath =  Path.Combine(Application.streamingAssetsPath + "/Tracks/", audioFileNme);
         Debug.Log("Play clip to " + filepath);
         // Make sure the directory exists
         Directory.CreateDirectory(Path.GetDirectoryName(filepath));

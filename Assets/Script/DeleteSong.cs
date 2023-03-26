@@ -14,7 +14,7 @@ public class DeleteSong : MonoBehaviour
             audioFileNme += ".wav";
         }
         // Combine the file path with the persistent data path of the application
-        string filePath = Path.Combine(Application.persistentDataPath, audioFileNme);
+        string filePath = Path.Combine(Application.streamingAssetsPath + "/Tracks/", audioFileNme);
 
         if (File.Exists(filePath)) // Check if the file exists at the given path, if so, delete it
         {

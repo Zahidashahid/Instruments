@@ -17,7 +17,7 @@ public static class SavWav
             filename += ".wav";
         }
 
-        var filepath = Path.Combine(Application.persistentDataPath, filename);
+        var filepath = Path.Combine(Application.streamingAssetsPath + "/Tracks/", filename);
 
         Debug.Log("Saving clip to " + filepath);
 
