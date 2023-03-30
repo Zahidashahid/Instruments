@@ -56,7 +56,7 @@ public class RecordAudio : MonoBehaviour
             trackName = _trackName;
             isPaused = false; // make sure recording is not paused
            // Start recording audio using the device's microphone
-            recordedClip = Microphone.Start(null, false, 10, 44100);
+            recordedClip = Microphone.Start(null, false, 360, 54100);
            
              
         }
