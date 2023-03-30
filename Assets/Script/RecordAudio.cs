@@ -1,6 +1,8 @@
-using UnityEngine;
+using UnityEngine; 
+using UnityEngine.Recorder; 
 using System.Collections;
 using TMPro;
+using UnityEngine.Audio;
 // Require an AudioSource component to be attached to the same GameObject
 [RequireComponent(typeof(AudioSource))]
 public class RecordAudio : MonoBehaviour
@@ -10,14 +12,17 @@ public class RecordAudio : MonoBehaviour
     private bool isPaused = false;
     // Audio-related variables
     private AudioSource audioSource;
-    private AudioClip recordedClip;
+    public AudioClip recordedClip;
     string trackName;
     public TMP_Text recordingTimeText;  // Reference to the UI Text object to display recording time
     public float recordingTime = 0f;  // current recording time
+    int trackCounter = 0;
     void Start()
     {
         // Get the attached AudioSource component
         audioSource = GetComponent<AudioSource>();
+         trackCounter = 0;
+
     }
     private void Update()
     {
@@ -32,29 +37,47 @@ public class RecordAudio : MonoBehaviour
             recordingTime = 0f; // Reset the recording time when recording is not in progress
         }
     }
-    public void RecordMusic(string _trackName)
+    public void NewRecording()
+    { 
+        trackCounter = PlayerPrefs.GetInt("TrackNum",0);
+        trackCounter++;
+        PlayerPrefs.SetInt("TrackNum", trackCounter);
+        PlayerPrefs.Save();
+
+        string _file = "Track " + trackCounter;
+        RecordMusic(_file);
+    }
+    void RecordMusic(string _trackName)
     {
-        if (!isRecording)
+          if (!isRecording)
         {
-            // Start recording audio using the device's microphone
             Debug.Log("Start recording...");
-            trackName = _trackName;
-            recordedClip = Microphone.Start(null, false, 10, 44100);
             isRecording = true;
+            trackName = _trackName;
             isPaused = false; // make sure recording is not paused
+           // Start recording audio using the device's microphone
+            recordedClip = Microphone.Start(null, false, 10, 44100);
+           
+             
         }
     }
     public void StopRecording()
     {
-        // Stop recording and save the recorded audio clip as a WAV file
-        Debug.Log("Stop recording...");
-        Microphone.End(null);
-        isRecording = false;
-        isPaused = false; // make sure recording is not paused
+        if(isRecording)
+        {
+            /// Stop recording and save the recorded audio clip as a WAV file
+            Debug.Log("Stop recording...");
+            Microphone.End(null);
+            isRecording = false;
+            isPaused = false; // make sure recording is not paused
 
-        // Save the recorded clip
-        SavWav.Save(trackName, recordedClip);
-        Debug.Log("Clip saved.");
+            // Save the recorded clip
+            SavWav.Save(trackName, recordedClip);
+            Debug.Log("Clip saved.");
+            recordingTime = 0;
+            recordingTimeText.text = "Recording : " + recordingTime.ToString("F2") + " seconds";  // update UI Text
+        }
+        
     }
     public void PauseRecording()
     {
@@ -74,4 +97,5 @@ public class RecordAudio : MonoBehaviour
             isPaused = false;
         }
     }
+    
 }

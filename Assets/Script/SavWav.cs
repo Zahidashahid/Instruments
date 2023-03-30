@@ -12,6 +12,8 @@ public static class SavWav
     // The method returns true if the file was saved successfully, false otherwise.
     public static bool Save(string filename, AudioClip clip)
     {
+        Debug.Log("filename " + filename);
+        Debug.Log("clip" + clip);
         if (!filename.ToLower().EndsWith(".wav"))
         {
             filename += ".wav";
